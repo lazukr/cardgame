@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "card.h"
 #include "deck.h"
 
 // function: initializes a deck
@@ -114,6 +115,64 @@ void shuffleDeck(struct Deck *deck) {
     }
 }
 
+// function: swaps two cards
+// inputs:
+//      struct Card *card1:
+//          reference to first card
+//      struct Card *card2:
+//          reference to second card
+//
+// output:
+//      void
+//
+// comments:
+//      for internal use
+//
+
+// function: removes card from deck by index
+//  inputs:
+//      struct Deck *deck:
+//          reference to the deck
+//      int index:
+//          index for the card in deck that we want to remove
+//      struct Card *card:
+//          reference to a card struct that will take on the value of
+//          the found card if it exists
+//
+// output:
+//      int:
+//          0 indicates no matches, 1 indicates a match was found and removed
+//
+// comments:
+//      returns struct Card in case we need to do something with it
+//
+
+int removeFromDeckByIndex(struct Deck *deck, int index, struct Card *copyCard) {
+    
+    int success = 0;
+
+    // makes sure index is within range
+    // if not, we will return empty card
+    if (index < deck->numOfCards) {
+        
+        *copyCard = deck->cards[index];
+        deck->numOfCards--;
+        
+        // shift all cards down the array
+        // this is inefficient O(n) time complexity each time
+        // but we will use this for the time being
+        for (int i = index; i < deck->numOfCards; i++) {
+            deck->cards[i] = deck->cards[i+1];
+        }
+
+        success = 1;
+
+    }
+    
+    return success;
+}
+
+
 void swapCards(struct Card *card1, struct Card *card2) {
     
     struct Card tempCard = *card1;
@@ -121,7 +180,18 @@ void swapCards(struct Card *card1, struct Card *card2) {
     *card2 = tempCard;
 }
 
-
+// function: prints the whole deck
+// inputs:
+//      struct Deck deck:
+//          deck that we want to print
+//      int numPerRow:
+//          number of cards to display per row
+//
+// output:
+//      void
+//
+// comments:
+//      
 
 void printDeck(struct Deck deck, int numPerRow) {
    

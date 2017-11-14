@@ -66,6 +66,10 @@ void printPlayerInfo(struct Player player) {
     printf("Score: %d\n", player.score);
     printf("Cards left to draw: %d\n", player.drawDeck.numOfCards);
     printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
+    printf("Field:\n");
+    printDeck(player.fieldDeck, FIELD_SIZE);
+    printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
+
 }
 
 void printSeparator(char c, int numTimes) {

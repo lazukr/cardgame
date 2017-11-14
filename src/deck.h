@@ -20,12 +20,14 @@ struct Deck {
 };
 
 struct Deck getDeck(int maxNumOfCards);
-void printDeck(struct Deck deck, int numPerRow);
+
 void insertToDeck(struct Deck *deck, int suit, int rank);
 void insertToDeckByCard(struct Deck *deck, struct Card card);
 void setDeckFace(struct Deck *deck, int face);
 void shuffleDeck(struct Deck *deck);
-struct Card removeFromDeckByIndex(struct Deck *deck, int index);
+int removeFromDeckByIndex(struct Deck *deck, int index, struct Card *copyCard);
+
+void printDeck(struct Deck deck, int numPerRow);
 void swapCards(struct Card *card1, struct Card *card2);
 
 

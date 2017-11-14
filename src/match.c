@@ -20,7 +20,9 @@
 struct Match newMatch() {
 
     struct Match thisMatch;
-    thisMatch.currentTurn = rand() % 2;
+    thisMatch.currentTurn = rand() % NUM_PLAYERS;
+
+
     
     return thisMatch;
 }
