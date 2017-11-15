@@ -22,7 +22,17 @@ int main() {
     srand(time(NULL));
 
     printf("Hello World!\n");
-        
+
+    struct Match thisMatch;
+
+    thisMatch = newMatch();
+
+    setDeckFace(&thisMatch.players[0].drawDeck, 1);
+    setDeckFace(&thisMatch.players[1].drawDeck, 1);
+
+    startMatch(&thisMatch);
+
+
     struct Deck thisDeck;
     struct Player player0;
 
@@ -42,6 +52,10 @@ int main() {
         drawToField(&player0);
     }
     printPlayerInfo(player0);
+
+    printf("match\n");
+    printMatch(thisMatch);
+
 
 
     return 0;

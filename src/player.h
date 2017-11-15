@@ -21,6 +21,7 @@ struct Player {
 struct Player getPlayer(int turn, struct Deck *deck);
 void drawToField(struct Player *player);
 void fieldToGrave(struct Player *player);
+void shufflePlayerDeck(struct Player *player);
 void printPlayerInfo(struct Player player);
 void printSeparator(char c, int numTimes);
 

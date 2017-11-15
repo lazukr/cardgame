@@ -8,7 +8,7 @@
 #include "card.h"
 
 // constants
-static char SUITS[4][6] = {"\u2665", "\u2663", "\u2660", "\u2666"};
+static char SUITS[4][6] = {"\u2665", "\u2666", "\u2660", "\u2663"};
 static char RANKS[13] = {'A', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K'};
 static char * FACE_DOWN_ASCII = "\u2588";
 

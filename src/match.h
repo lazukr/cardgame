@@ -18,7 +18,6 @@
 
 struct Match {
     
-    struct Deck masterDeck[NUM_SUITS];
     struct Player players[NUM_PLAYERS];
     int currentTurn;
 
@@ -26,7 +25,7 @@ struct Match {
 
 struct Match newMatch();
 void startMatch(struct Match *match);
-
+void printMatch(struct Match match);
 
 #endif
 

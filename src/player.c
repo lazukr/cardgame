@@ -104,6 +104,24 @@ void FieldToGrave(struct Player *player) {
 
 }
 
+// function: shuffles the draw deck of a player
+//
+// inputs:
+//      struct Player *player:
+//          reference to a player
+//
+// output:
+//      void
+//
+// comments:
+//
+
+void shufflePlayerDeck(struct Player *player) {
+    
+    shuffleDeck(&player->drawDeck); 
+
+}
+
 void printPlayerInfo(struct Player player) {
     
     printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
