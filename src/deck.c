@@ -12,10 +12,12 @@
 
 // function: initializes a deck
 // inputs:
-//      int maxNumOfCards, maximum number of cards in deck 
+//      int maxNumOfCards:
+//           maximum number of cards in deck 
 //      
 // output:
-//      struct Deck, structure containg details of a Deck
+//      struct Deck:
+//           structure containg details of a Deck
 //
 // comments:
 //      
@@ -30,9 +32,12 @@ struct Deck getDeck(int maxNumOfCards) {
 
 // function: inserts card into deck 
 // inputs:
-//      struct Deck *deck, reference of deck to insert card into
-//      int suit, suit of the card we want to insert
-//      int rank, rank of the card we want to insert
+//      struct Deck *deck:
+//           reference of deck to insert card into
+//      int suit:
+//           suit of the card we want to insert
+//      int rank:
+//           rank of the card we want to insert
 //
 // output:
 //      void
@@ -55,8 +60,10 @@ void insertToDeck(struct Deck *deck, int suit, int rank) {
 
 // function: inserts card into deck
 // inputs:
-//      struct Deck *deck, reference of the deck to insert card into
-//      struct Card card, card to insert into deck
+//      struct Deck *deck:
+//           reference of the deck to insert card into
+//      struct Card card:
+//           card to insert into deck
 //
 // output:
 //      void
@@ -78,8 +85,10 @@ void insertToDeckByCard(struct Deck *deck, struct Card card) {
 
 // function: set all cards' face in deck to value of face
 // inputs:
-//      struct Deck *deck, reference of the deck
-//      int face, value of face to set cards to
+//      struct Deck *deck:
+//          reference of the deck
+//      int face:
+//           value of face to set cards to
 //
 // output:
 //      void
@@ -93,6 +102,31 @@ void setDeckFace(struct Deck *deck, int face) {
         deck->cards[i].face = face;
     }
 }
+
+// function: flips a card of the specified index in the deck to the
+//           value of the face
+//
+// inputs:
+//      struct Deck *deck:
+//          reference to the deck
+//      int face:
+//          value of the face to set to
+//      int index:
+//          index of the card in deck
+//
+// output:
+//      void
+//
+// comments:
+//
+
+void flipFace(struct Deck *deck, int face, int index) {
+    
+    if (index < deck->numOfCards) {
+        deck->cards[index].face = face;
+    }
+}
+
 
 // function: shuffles the deck
 // inputs:
@@ -234,6 +268,12 @@ void printDeck(struct Deck deck, int numPerRow) {
     }
     printf("\n");
 
+}
+
+// function: free the deck's cards
+
+void freeDeck(struct Deck *deck) {
+    free(deck->cards);
 }
 
 // end of file

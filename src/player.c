@@ -9,13 +9,12 @@
 #include "player.h"
 #include "card.h"
 #include "deck.h"
-
+#include "utils.h"
 // constants
 
 #define FIELD_SIZE 14
 #define HALF_DECK 26
-#define SEPARATOR_COUNT 50
-#define SEPARATOR_CHAR '='
+#define RANKS 13
 
 // function: initalizes a player
 // inputs:
@@ -78,6 +77,8 @@ void drawToField(struct Player *player) {
 // inputs:
 //      struct Player *player:
 //          reference to a player
+//      int index:
+//          index of the card we are removing
 //
 // output:
 //      void
@@ -85,7 +86,7 @@ void drawToField(struct Player *player) {
 // comments:
 //
 
-void FieldToGrave(struct Player *player) {
+void fieldToGrave(struct Player *player, int index) {
     
     if (isFull(player->graveDeck)) {
         //printf("Grave deck is full.\n");
@@ -94,9 +95,8 @@ void FieldToGrave(struct Player *player) {
 
 
     struct Card copyCard;
-    int indexOfLast = player->fieldDeck.numOfCards - 1;
     int fieldSuccess = removeFromDeckByIndex(&player->fieldDeck,
-            indexOfLast, &copyCard);
+            index, &copyCard);
 
     if (fieldSuccess) {
         insertToDeckByCard(&player->graveDeck, copyCard);
@@ -122,31 +122,43 @@ void shufflePlayerDeck(struct Player *player) {
 
 }
 
+int hasWon(struct Player player) {
+    
+    int hasWon = 0;
+    if (player.score == RANKS) {
+        hasWon = 1;
+    } 
+    return hasWon;
+}
+
 void printPlayerInfo(struct Player player) {
     
-    printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
+    printSeparator();
     printf("Player: %-5d", player.turn);
     printf("Score: %d\n", player.score);
     printf("Cards left to draw: %d\n", player.drawDeck.numOfCards);
     printDeck(player.drawDeck, HALF_DECK/2);
-    printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
-    printf("Field:\n");
-    printDeck(player.fieldDeck, FIELD_SIZE);
-    printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT);
+    printSeparator();
     printf("Grave:\n");
     printDeck(player.graveDeck, HALF_DECK/2);
-    printSeparator(SEPARATOR_CHAR, SEPARATOR_COUNT); 
-
-}
-
-void printSeparator(char c, int numTimes) {
-    
-    for (int i = 0; i < numTimes; i++) {
-        printf("%c", c);
+    printSeparator(); 
+    printf("Field:\n");
+    for (int i = 0; i < player.fieldDeck.numOfCards; i++) {
+        printf("%02d ", i);
     }
     printf("\n");
+    printDeck(player.fieldDeck, FIELD_SIZE);
+    printSeparator();
 }
 
+
+// function: free player's decks
+void freePlayer(struct Player *player) {
+    
+    freeDeck(&player->drawDeck);
+    freeDeck(&player->fieldDeck);
+    freeDeck(&player->graveDeck);
+}
 
 // end of file
 // player.c

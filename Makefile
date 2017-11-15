@@ -3,7 +3,7 @@
 CC = gcc
 CFLAGS += -std=c99 -g -Wall
 OBJDIR = src
-OBJS = $(addprefix $(OBJDIR)/, card.o deck.o player.o match.o)
+OBJS = $(addprefix $(OBJDIR)/, card.o deck.o player.o match.o utils.o)
 
 game: $(OBJS) game.o
 	$(CC) $(CFLAGS) -o $@ game.c $(OBJS)
