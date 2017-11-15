@@ -34,13 +34,15 @@ int main() {
     }
 
     player0 = getPlayer(0, &thisDeck);
-    printPlayerInfo(player0);
-
     shuffleDeck(&thisDeck);
     setDeckFace(&thisDeck, 1);
-    printDeck(thisDeck, NUM_RANKS);
-
     printPlayerInfo(player0);
+
+    for (int i = 0; i < NUM_RANKS*5; i++) {
+        drawToField(&player0);
+    }
+    printPlayerInfo(player0);
+
 
     return 0;
 }

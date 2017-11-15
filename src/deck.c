@@ -43,7 +43,7 @@ struct Deck getDeck(int maxNumOfCards) {
 
 void insertToDeck(struct Deck *deck, int suit, int rank) {
     
-    if (deck->numOfCards == deck->maxNumOfCards) {
+    if (isFull(*deck)) {
         printf("Deck is full.\n");
         return;
     }
@@ -152,8 +152,8 @@ int removeFromDeckByIndex(struct Deck *deck, int index, struct Card *copyCard) {
     int success = 0;
 
     // makes sure index is within range
-    // if not, we will return empty card
-    if (index < deck->numOfCards) {
+    // if not, we will return 0 for removal failure
+    if (index >= 0 && index < deck->numOfCards) {
         
         *copyCard = deck->cards[index];
         deck->numOfCards--;
@@ -180,6 +180,26 @@ void swapCards(struct Card *card1, struct Card *card2) {
     *card2 = tempCard;
 }
 
+int isFull(struct Deck deck) {
+    int full = 0;
+    
+    if (deck.numOfCards == deck.maxNumOfCards) {
+        full = 1;
+    }
+    return full;
+}
+
+int isEmpty(struct Deck deck) {
+    
+    int empty = 0;
+
+    if (deck.numOfCards == 0) {
+        empty = 1;
+    }
+    return empty;
+}
+
+
 // function: prints the whole deck
 // inputs:
 //      struct Deck deck:
@@ -195,7 +215,7 @@ void swapCards(struct Card *card1, struct Card *card2) {
 
 void printDeck(struct Deck deck, int numPerRow) {
    
-    if (deck.numOfCards == 0) {
+    if (isEmpty(deck)) {
         printf("Empty Deck.\n");
         return;
     }

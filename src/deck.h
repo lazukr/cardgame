@@ -27,6 +27,9 @@ void setDeckFace(struct Deck *deck, int face);
 void shuffleDeck(struct Deck *deck);
 int removeFromDeckByIndex(struct Deck *deck, int index, struct Card *copyCard);
 
+int isFull(struct Deck deck);
+int isEmpty(struct Deck deck);
+
 void printDeck(struct Deck deck, int numPerRow);
 void swapCards(struct Card *card1, struct Card *card2);
 
