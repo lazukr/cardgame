@@ -81,7 +81,6 @@ void startMatch(struct Match *match) {
     } 
     
     playMatch(match);
-
 }
 
 // function: this is where the main playing loop is 
@@ -106,15 +105,17 @@ void playMatch(struct Match *match) {
         printf("\n\n");
         
         printSeparator();
-        printf("It's player %d turn.\n", match->currentTurn);
-    
+        printf("It's Player %d turn.\n", match->currentTurn);
+        printPlayerStats(match->players[match->currentTurn]);
+
         int enemy = 1 - match->currentTurn;
         int selected[2] = {-1, -1};
         struct Player *enemyPlayer = &match->players[enemy];
         struct Deck *enemyField = &match->players[enemy].fieldDeck;
         int validIndices = enemyField->numOfCards - 1;
 
-        printf("Please select two cards from your opponent's field. \n");
+        printf("Please select two cards from your opponent's field. \n\n\n");
+
         printPlayerInfo(*enemyPlayer);
         
         while (selected[0] < 0 || selected[0] > validIndices) {            
@@ -123,7 +124,7 @@ void playMatch(struct Match *match) {
         }
         
         flipFace(enemyField, 1, selected[0]);
-        printDeck(*enemyField, -1);
+        printPlayerField(*enemyPlayer);
 
         while (selected[1] < 0 || selected[1] > validIndices || selected[0] == selected[1]) {
             
@@ -131,12 +132,12 @@ void playMatch(struct Match *match) {
                 printf("You cannot select the same card twice.\n");
             }
 
-            printf("Please select the index of the second card. Between 0 and %d, but not the same as your first selection, %d\n", validIndices, selected[0]);
+            printf("Please select the index of the second card. Between 0 and %d,\nbut not the same as your first selection, %d\n", validIndices, selected[0]);
             getInput(&selected[1]);
         }
 
         flipFace(enemyField, 1, selected[1]);
-        printDeck(*enemyField, -1);        
+        printPlayerField(*enemyPlayer);
 
         if (enemyField->cards[selected[0]].rank == enemyField->cards[selected[1]].rank) {
             
@@ -173,6 +174,13 @@ void playMatch(struct Match *match) {
         getchar();
     }
 
+    if (hasWon(match->players[0])) {
+        printf("Player 0 has won!\n");
+    } else {
+        printf("player 1 has won!\n");
+    }
+
+    printf("\n\n\n");
 }
 
 
@@ -186,6 +194,12 @@ void printMatch(struct Match match) {
 
 }
 
+void freeMatch(struct Match *match) {
+    
+    freePlayer(&match->players[0]);
+    freePlayer(&match->players[1]);
+
+}
 
 // end of file
 // match.c

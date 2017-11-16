@@ -28,16 +28,11 @@ int main() {
     int current;
 
     printf("Welcome to Cardgame!\n\n");
-    printMenu();
-    getInput(&current);
-
 
     while (run) {
+        printMenu();
+        getInput(&current);
         switch (current) {
-            case -1:
-                printMenu();
-                break;
-            
             case 1:
                 printStartGame();
                 break;
@@ -48,11 +43,8 @@ int main() {
 
             default:
                 printInvalidInput();
-                printMenu();
                 break;
         }
-        
-        getInput(&current);
     }
 
     return 0;
@@ -80,13 +72,8 @@ void printStartGame() {
 
     struct Match thisMatch;
     thisMatch = newMatch();
-    //setDeckFace(&thisMatch.players[0].drawDeck, 1);
-    //setDeckFace(&thisMatch.players[1].drawDeck, 1);
     startMatch(&thisMatch);
-
-    printf("match\n");
-    printMatch(thisMatch);
-
+    freeMatch(&thisMatch);
 }
 
 // end of file

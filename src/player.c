@@ -125,7 +125,14 @@ void shufflePlayerDeck(struct Player *player) {
 int hasWon(struct Player player) {
     
     int hasWon = 0;
-    if (player.score == RANKS) {
+    
+    // win condition is when you've cleared both
+    // the enemy's field and draw deck
+    // since it is half the standard 52 playing cards
+    // there are 26 cards in their deck
+    // and since cards are removed in pairs
+    // 26 / 2 = 13
+    if (player.score == HALF_DECK/2) {
         hasWon = 1;
     } 
     return hasWon;
@@ -134,14 +141,27 @@ int hasWon(struct Player player) {
 void printPlayerInfo(struct Player player) {
     
     printSeparator();
+    printPlayerStats(player);
+    printPlayerGrave(player);
+    printPlayerField(player);
+}
+
+void printPlayerStats(struct Player player) {
+    
     printf("Player: %-5d", player.turn);
     printf("Score: %d\n", player.score);
-    printf("Cards left to draw: %d\n", player.drawDeck.numOfCards);
-    printDeck(player.drawDeck, HALF_DECK/2);
+    printf("Cars left to draw: %d\n", player.drawDeck.numOfCards);
     printSeparator();
+}
+
+void printPlayerGrave(struct Player player) {
+    
     printf("Grave:\n");
     printDeck(player.graveDeck, HALF_DECK/2);
-    printSeparator(); 
+    printSeparator();
+}
+
+void printPlayerField(struct Player player) {
     printf("Field:\n");
     for (int i = 0; i < player.fieldDeck.numOfCards; i++) {
         printf("%02d ", i);

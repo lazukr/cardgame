@@ -27,6 +27,7 @@ struct Match newMatch();
 void startMatch(struct Match *match);
 void playMatch(struct Match *match);
 void printMatch(struct Match match);
+void freeMatch(struct Match *match);
 
 #endif
 
