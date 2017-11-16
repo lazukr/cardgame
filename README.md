@@ -15,4 +15,9 @@ During each turn, the player does the following steps:
 
 Players will continue to go back and forth until one player's field and deck is empty.
 
+## Things to add in the future
+* AI that can play with you
+    * Multiple difficulties
+* Optional move to remove card from your deck to make it harder for your opponent to keep track of all your cards
+* Multiplayer, perhaps?
 
