@@ -17,6 +17,8 @@
 #define NUM_RANKS 13
 #define HALF_DECK 26
 #define FIELD_SIZE 14
+#define SEP_CHAR '='
+#define SEP_COUNT 50
 
 // function: creates a new match
 // inputs:
@@ -102,96 +104,182 @@ void playMatch(struct Match *match) {
     while ( !hasWon(match->players[0])
             && !hasWon(match->players[1])) {
         
-        printf("\n\n");
-        
-        printSeparator();
-        printf("It's Player %d turn.\n", match->currentTurn);
-        printPlayerStats(match->players[match->currentTurn]);
+        int playerID = match->currentTurn;
+        int enemyID = 1 - playerID;
+        int selectedCards[2] = {-1, -1};
+        struct Player *enemyPlayer = &match->players[enemyID];
 
-        int enemy = 1 - match->currentTurn;
-        int selected[2] = {-1, -1};
-        struct Player *enemyPlayer = &match->players[enemy];
-        struct Deck *enemyField = &match->players[enemy].fieldDeck;
-        int validIndices = enemyField->numOfCards - 1;
 
-        printf("Please select two cards from your opponent's field. \n\n\n");
-
-        printPlayerInfo(*enemyPlayer);
+        printCurrentTurn(match->players[playerID]);
+        selectCards(enemyPlayer, selectedCards);
         
-        while (selected[0] < 0 || selected[0] > validIndices) {            
-            printf("Please select the first card. Between 0 and %d\n", validIndices);
-            getInput(&selected[0]);
-        }
-        
-        flipFace(enemyField, 1, selected[0]);
+        // flips the cards
+        flipFace(&enemyPlayer->fieldDeck, 1, selectedCards[0]);
+        flipFace(&enemyPlayer->fieldDeck, 1, selectedCards[1]);
+ 
+        // displays the cards
+        printSeparator(SEP_CHAR, SEP_COUNT);
         printPlayerField(*enemyPlayer);
+        printf("\n");
 
-        while (selected[1] < 0 || selected[1] > validIndices || selected[0] == selected[1]) {
+        if (checkSelection(enemyPlayer->fieldDeck, selectedCards)) {
             
-            if (selected[0] == selected[1]) {
-                printf("You cannot select the same card twice.\n");
-            }
+            // cards matches
 
-            printf("Please select the index of the second card. Between 0 and %d,\nbut not the same as your first selection, %d\n", validIndices, selected[0]);
-            getInput(&selected[1]);
-        }
-
-        flipFace(enemyField, 1, selected[1]);
-        printPlayerField(*enemyPlayer);
-
-        if (enemyField->cards[selected[0]].rank == enemyField->cards[selected[1]].rank) {
-            
             printf("You have found a matching pair! \n");
             printf("+1 point for you! \n");
-            
+            updatePlayerDecks(enemyPlayer, selectedCards);
+            int currentScore = ++match->players[playerID].score;
+            printf("Your score is now %d!\n", currentScore);
 
-            // remove them with larger indices first
-            // avoids removing the wrong item 
-            if (selected[0] > selected[1]) {
-                fieldToGrave(enemyPlayer, selected[0]);
-                fieldToGrave(enemyPlayer, selected[1]);
+        } else {
 
-            } else {
-                fieldToGrave(enemyPlayer, selected[1]);
-                fieldToGrave(enemyPlayer, selected[0]);
+            // cards don't match
 
-            }
-            
-            drawToField(enemyPlayer);
-            drawToField(enemyPlayer);
-
-            
-            match->players[match->currentTurn].score++;
-
-        }  else {
             printf("You did not find a match. \n");
-            setDeckFace(enemyField, 0);
+            setDeckFace(&enemyPlayer->fieldDeck, 0);
         }
-
-        match->currentTurn = enemy;
+        
+        // updates turn
+        match->currentTurn = enemyID;
         
         printf("Press any button to continue.");
         getchar();
     }
 
-    if (hasWon(match->players[0])) {
-        printf("Player 0 has won!\n");
-    } else {
-        printf("player 1 has won!\n");
+    // declare winner
+    int winner = 0;
+    if (hasWon(match->players[1])) {
+        winner = 1;
     }
+
+    displayWinner(winner);
 
     printf("\n\n\n");
 }
 
+// function: updates players deck
+// inputs:
+//      struct Player *enemyPlayer:
+//          the enemy player
+//      int *selected:
+//          reference to the indices selected by current turn player
+//
+// output:
+//      void
+//
+// comments:
+//      the function only uses the first two indices of selected
+//      thus I didn't bother passing in a length parameter
 
+void updatePlayerDecks(struct Player *enemyPlayer, int *selected) {
 
-// function: prints all details of the match
-
-void printMatch(struct Match match) {
+    // remove them with larger indices first
+    // avoids removing the wrong item 
     
-    printPlayerInfo(match.players[0]);
-    printPlayerInfo(match.players[1]); 
+    if (selected[0] > selected[1]) {
+        fieldToGrave(enemyPlayer, selected[0]);
+        fieldToGrave(enemyPlayer, selected[1]);
 
+    } else {
+        fieldToGrave(enemyPlayer, selected[1]);
+        fieldToGrave(enemyPlayer, selected[0]);
+
+    }
+    
+    drawToField(enemyPlayer);
+    drawToField(enemyPlayer);
+
+}
+
+// function: grabs the selection that the user inputs
+// input:
+//      struct Player *enemyPlayer:
+//          reference to the enemy player
+//      int *curSelection:
+//          the current selection
+// output:
+//      void
+//
+// comments:
+//      again, this function assumes the current selection is not one
+//      of the possible values. Each loop on the playmatch, we reset the 
+//      current selection to {-1, -1}, thus I do not check on it
+
+void selectCards(struct Player *enemyPlayer, int *curSelection) {
+
+    int validIndices = enemyPlayer->fieldDeck.numOfCards - 1; // arrays start from 0 to n - 1
+
+    printPlayerInfo(*enemyPlayer);
+
+    while ( (curSelection[0] < 0 || curSelection[0] > validIndices) // first value is between 0 and valid index
+            && (curSelection[1] < 0 || curSelection[1] > validIndices) // second value is between 0 and valid index
+            && (curSelection[0] == curSelection[1])) { // the two values are not equal each other
+        
+        printf("Please select the indices of two cards to reveal. ");
+        printf("It must be from 0 and %d, and they cannot be the same values.\n", validIndices);
+        
+        // grabs the inputs
+        scanf("%d %d", &curSelection[0], &curSelection[1]);
+        while (getchar() != '\n'); // remove remaining characters from buffer
+        printf("\n");
+    }
+}
+
+// function: checks if the selected cards match
+// inputs:
+//      struct Deck enemyDeck:
+//          enemy deck
+//      int *selected:
+//          indices selected by player to check
+// output:
+//      int:
+//          true if they are equal rank, else false
+//
+// comments:
+//
+
+int checkSelection(struct Deck enemyDeck, int *selected) {
+
+    int foundPair = 0;
+
+    if(enemyDeck.cards[selected[0]].rank == enemyDeck.cards[selected[1]].rank) {
+        
+        foundPair = 1;
+    }
+
+    return foundPair;
+}
+
+
+void printCurrentTurn(struct Player player) {
+   
+    printSeparator('#', 26); 
+    printf("#%25c\n", '#');
+    printf("# It's Player %d turn.%5c\n", player.id, '#');
+    printf("# Score: %02d%15c\n", player.score, '#');
+    printf("# Cards left in deck: %2d #\n", player.drawDeck.numOfCards);
+    printf("#%25c\n", '#');
+    printSeparator('#', 26);
+    printf("\n\n");
+}
+
+void updateTurn(struct Match *match) {
+    
+    match->currentTurn = 1 - match->currentTurn;
+
+}
+
+void displayWinner(int winner) {
+
+    printf("/###   /###   #   #  /###   ####   /###  ##### /###   /#   \n");
+    printf("#   #  #   #  ##  #  #      #   #  #   #   #   #   #  ###  \n");
+    printf("#      #   #  # # #  #      #   #  #   #   #    ##    ###  \n");
+    printf("#      #   #  #  ##  #  ##  ####/  #####   #     ##    #/  \n");
+    printf("#   #  #   #  #   #  #   #  #  #   #   #   #   #   #       \n");
+    printf(" ###/   ###/  #   #   ###/  #   #  #   #   #    ###/   #   \n");
+
+    printf("Player %d has won!\n", winner);
 }
 
 void freeMatch(struct Match *match) {
@@ -203,4 +291,4 @@ void freeMatch(struct Match *match) {
 
 // end of file
 // match.c
-
+ 

@@ -15,11 +15,13 @@
 #define FIELD_SIZE 14
 #define HALF_DECK 26
 #define RANKS 13
+#define SEP_CHAR '='
+#define SEP_COUNT 50
 
 // function: initalizes a player
 // inputs:
-//      int turn:
-//          the turn that the player represents
+//      int id:
+//          the identity that the player represents
 //          should be 0 or 1
 //      
 //      struct Deck:
@@ -32,11 +34,11 @@
 // comments:
 //
 
-struct Player getPlayer(int turn, struct Deck *deck) {
+struct Player getPlayer(int id, struct Deck *deck) {
 
     struct Player newPlayer;
-    newPlayer.turn = turn;
     newPlayer.score = 0;
+    newPlayer.id = id;
     newPlayer.drawDeck = *deck;
     newPlayer.fieldDeck = getDeck(FIELD_SIZE);
     newPlayer.graveDeck = getDeck(HALF_DECK);
@@ -132,33 +134,39 @@ int hasWon(struct Player player) {
     // there are 26 cards in their deck
     // and since cards are removed in pairs
     // 26 / 2 = 13
-    if (player.score == HALF_DECK/2) {
+    if (player.score == HALF_DECK / 2) {
         hasWon = 1;
     } 
     return hasWon;
 }
 
 void printPlayerInfo(struct Player player) {
-    
-    printSeparator();
-    printPlayerStats(player);
-    printPlayerGrave(player);
+
+    printPlayerID(player);
+    if (!isEmpty(player.graveDeck)) {
+        printPlayerGrave(player);
+    }
+
     printPlayerField(player);
+    printf("\n");
+}
+
+void printPlayerID(struct Player player) {
+    printf("Player %d's Stats\n", player.id);
+    printSeparator(SEP_CHAR, SEP_COUNT);
 }
 
 void printPlayerStats(struct Player player) {
     
-    printf("Player: %-5d", player.turn);
-    printf("Score: %d\n", player.score);
-    printf("Cars left to draw: %d\n", player.drawDeck.numOfCards);
-    printSeparator();
+    printf("Score: %-3d", player.score);
+    printf("Cards left to draw: %d\n", player.drawDeck.numOfCards);
 }
 
 void printPlayerGrave(struct Player player) {
     
     printf("Grave:\n");
     printDeck(player.graveDeck, HALF_DECK/2);
-    printSeparator();
+    printSeparator(SEP_CHAR, SEP_COUNT);
 }
 
 void printPlayerField(struct Player player) {
@@ -168,7 +176,7 @@ void printPlayerField(struct Player player) {
     }
     printf("\n");
     printDeck(player.fieldDeck, FIELD_SIZE);
-    printSeparator();
+    printSeparator(SEP_CHAR, SEP_COUNT);
 }
 
 
@@ -182,4 +190,4 @@ void freePlayer(struct Player *player) {
 
 // end of file
 // player.c
- 
+

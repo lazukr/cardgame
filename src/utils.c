@@ -18,10 +18,10 @@ void getInput(int *input) {
     printf("\n");
 }
 
-void printSeparator() {
+void printSeparator(char c, int count) {
     
-    for (int i = 0; i < SEPR_NUM; i++) {
-        printf("%c", SEPR_CHAR);
+    for (int i = 0; i < count; i++) {
+        printf("%c", c);
     }
     printf("\n");
 

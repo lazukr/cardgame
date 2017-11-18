@@ -72,6 +72,10 @@ void printStartGame() {
 
     struct Match thisMatch;
     thisMatch = newMatch();
+    
+    //setDeckFace(&thisMatch.players[0].drawDeck, 1);
+    //setDeckFace(&thisMatch.players[1].drawDeck, 1);
+
     startMatch(&thisMatch);
     freeMatch(&thisMatch);
 }
