@@ -27,6 +27,7 @@ struct Deck getDeck(int maxNumOfCards) {
     newDeck.maxNumOfCards = maxNumOfCards;
     newDeck.numOfCards = 0;
     newDeck.cards = (struct Card *)malloc(sizeof(struct Card)*maxNumOfCards);
+    //newDeck.cards;
     return newDeck;
 }
 

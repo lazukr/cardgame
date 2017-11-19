@@ -26,7 +26,14 @@ struct Match {
 struct Match newMatch();
 void startMatch(struct Match *match);
 void playMatch(struct Match *match);
-void printMatch(struct Match match);
+
+void updatePlayerDecks(struct Player *enemyPlayer, int *selected);
+void selectCards(struct Player *enemyPlayer, int *selected);
+int checkSelection(struct Deck enemyDeck, int *selected);
+
+void printCurrentTurn(struct Player player);
+void updateTurn(struct Match *match);
+void displayWinner(int winner);
 void freeMatch(struct Match *match);
 
 #endif
